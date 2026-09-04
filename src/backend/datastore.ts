@@ -1,9 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { CampusDatabase, Schedule, Room, EventItem, Announcement, Assignment } from './types';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'campusos_db.json');
+const TMP_DB_FILE = path.join(os.tmpdir(), 'campusos_db.json');
 
 let inMemoryDb: CampusDatabase | null = null;
 
@@ -33,11 +35,6 @@ export function getDatabase(): CampusDatabase {
     return inMemoryDb;
   }
 
-  // Ensure data directory exists
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-
   if (fs.existsSync(DB_FILE)) {
     try {
       const data = fs.readFileSync(DB_FILE, 'utf-8');
@@ -46,7 +43,19 @@ export function getDatabase(): CampusDatabase {
         return inMemoryDb;
       }
     } catch (err) {
-      console.error('Failed reading existing campusos_db.json, re-initializing from seeds:', err);
+      console.error('Failed reading existing campusos_db.json:', err);
+    }
+  }
+
+  if (fs.existsSync(TMP_DB_FILE)) {
+    try {
+      const data = fs.readFileSync(TMP_DB_FILE, 'utf-8');
+      inMemoryDb = JSON.parse(data);
+      if (inMemoryDb && inMemoryDb.schedules && inMemoryDb.rooms && inMemoryDb.events && inMemoryDb.announcements && inMemoryDb.assignments) {
+        return inMemoryDb;
+      }
+    } catch (err) {
+      console.error('Failed reading tmp campusos_db.json:', err);
     }
   }
 
@@ -59,13 +68,27 @@ export function getDatabase(): CampusDatabase {
 
 export function saveDatabase(db: CampusDatabase): void {
   inMemoryDb = db;
-  const tempPath = `${DB_FILE}.tmp`;
+  
+  // Try writing to main project directory first (local dev / persistent server)
   try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const tempPath = `${DB_FILE}.tmp`;
     fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf-8');
     fs.renameSync(tempPath, DB_FILE);
-  } catch {
-    // Direct write fallback
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf-8');
+    return;
+  } catch (err) {
+    // Read-only filesystem in serverless environments (/var/task)
+  }
+
+  // Fallback: try writing to OS temp directory (/tmp)
+  try {
+    const tempPath = `${TMP_DB_FILE}.tmp`;
+    fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf-8');
+    fs.renameSync(tempPath, TMP_DB_FILE);
+  } catch (err) {
+    console.warn('Persistence unavailable. Operating in pure in-memory mode.');
   }
 }
 
