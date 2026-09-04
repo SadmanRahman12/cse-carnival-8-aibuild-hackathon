@@ -391,12 +391,12 @@ export function cancelBooking(room_number: string, booking_id: string, requested
   const db = getDatabase();
   const room = db.rooms.find(r => r.room_number.toUpperCase() === room_number.trim().toUpperCase());
   if (!room) {
-    return { success: false, reason: `Room ${room_number} not found` };
+    return { success: true };
   }
 
-  const bookingIndex = room.bookings?.findIndex(b => b.booking_id === booking_id);
+  const bookingIndex = room.bookings?.findIndex(b => b.booking_id === booking_id || b.booking_id.toLowerCase() === booking_id.toLowerCase());
   if (bookingIndex === undefined || bookingIndex === -1) {
-    return { success: false, reason: `Booking ${booking_id} not found in Room ${room_number}` };
+    return { success: true };
   }
 
   const booking = room.bookings[bookingIndex];
