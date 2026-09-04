@@ -28,12 +28,46 @@ function getTodayName(): string {
   return DAY_NAMES[new Date().getDay()];
 }
 
+// Resolve relative day words ("today", "tomorrow", "day after tomorrow") to an actual weekday name
+function resolveRelativeDay(query: string): string | null {
+  const todayIdx = new Date().getDay();
+  if (query.includes('day after tomorrow')) {
+    return DAY_NAMES[(todayIdx + 2) % 7];
+  }
+  if (query.includes('tomorrow')) {
+    return DAY_NAMES[(todayIdx + 1) % 7];
+  }
+  if (query.includes('today')) {
+    return DAY_NAMES[todayIdx];
+  }
+  return null;
+}
+
 // Get current time in 24h HH:MM format from the real system clock
 function getCurrentTime24(): string {
   const now = new Date();
   const h = String(now.getHours()).padStart(2, '0');
   const m = String(now.getMinutes()).padStart(2, '0');
   return `${h}:${m}`;
+}
+
+// Typo-tolerant variants: match "avail*ble" style misspellings of "available"
+const AVAIL_ALIASES = ['available', 'avail', 'availble', 'avalible', 'avaliable', 'availiable', 'avaliab'];
+function hasAvailIntent(q: string): boolean {
+  return AVAIL_ALIASES.some((a) => q.includes(a));
+}
+
+// Detect a "room(s)"-like token, tolerant of common typos (e.g. "roooms", "roomms").
+function hasRoomToken(q: string): boolean {
+  return /\broom(s)?\b/i.test(q) || /\bro+o+m+s?\b/i.test(q);
+}
+
+// True when the query is essentially a bare room request (e.g. "rooms?", "room",
+// "roooms") with no other domain signal that would make it a different intent.
+function isBareRoomQuery(q: string): boolean {
+  const otherIntentWords =
+    /\b(class|lecture|event|announcement|assignment|schedule|book|reserve|cancel|register|assignment)\b/i;
+  return !!hasRoomToken(q) && !otherIntentWords.test(q);
 }
 
 // Autonomous Built-in Tool Calling Engine (Zero External Dependencies)
@@ -353,8 +387,8 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
     };
   }
 
-  // 6. Simple Lookup: "When is my next class?"
-  if (q.includes('next class')) {
+  // 6. Simple Lookup: "When is my next class?" / "when's my next lecture?" / "next class" / "next lecture"
+  if (q.includes('next class') || q.includes('next lecture') || q.includes('next class')) {
     const now = getCurrentTime24();
     const todayName = getTodayName();
 
@@ -393,6 +427,32 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
 
     return {
       answer: "You don't have any classes scheduled for the rest of the week.",
+      toolCalls,
+      providerUsed: 'Autonomous Tool-Calling Engine',
+    };
+  }
+
+  // 6b. Schedule for relative day words: "what class do i have tomorrow?", "what's on today?", etc.
+  const relativeDayName = resolveRelativeDay(q);
+  if (relativeDayName && (q.includes('class') || q.includes('schedule') || /\b(on|have|anything|about|for)\b/.test(q))) {
+    const schedCall = await executeAgentTool('get_schedule', { day: relativeDayName });
+    toolCalls.push(schedCall);
+
+    const list = schedCall.result.schedules || [];
+    if (list.length === 0) {
+      return {
+        answer: `You have no scheduled classes on **${relativeDayName}**. Enjoy your day!`,
+        toolCalls,
+        providerUsed: 'Autonomous Tool-Calling Engine',
+      };
+    }
+
+    const formatted = list
+      .map((s: any) => `• **${s.course} (${s.section})**: ${s.title}\n  ⏰ ${formatTime12(s.start_time)} – ${formatTime12(s.end_time)} | 📍 Room ${s.room} | 👨‍🏫 ${s.instructor}`)
+      .join('\n');
+
+    return {
+      answer: `Here is your class schedule for **${relativeDayName}** (${list.length} classes):\n\n${formatted}`,
       toolCalls,
       providerUsed: 'Autonomous Tool-Calling Engine',
     };
@@ -514,21 +574,41 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
     }
   }
 
-  // 10a. Room availability / room listing: "available rooms?", "what rooms are free?", "show me available rooms"
-  if (
-    q.includes('room') && (
-      q.includes('available') || q.includes('free') || q.includes('open') ||
-      q.includes('availability') || q.includes('which room') || q.includes('show me') ||
-      q.includes('list room') || q.includes('all room')
-    )
-  ) {
+  // 10a. Room availability / room listing: "available rooms?", "rooms?", "what rooms are free?", "show me available rooms"
+  const isRoomMention = hasRoomToken(q);
+  const hasRoomQualifier =
+    hasAvailIntent(q) || q.includes('free') || q.includes('open') ||
+    q.includes('availability') || q.includes('which room') || q.includes('show me') ||
+    q.includes('list room') || q.includes('all room') || q.includes('find room') ||
+    q.includes('got any') || q.includes('capacity');
+  const isRoomAction =
+    q.includes('book') || q.includes('reserve') || q.includes('cancel') ||
+    q.includes('delete booking') || q.includes('remove booking');
+
+  if (isRoomMention && (hasRoomQualifier || isBareRoomQuery(q)) && !isRoomAction) {
     const typeFilter = q.includes('lab') ? 'lab' : q.includes('seminar') ? 'seminar' : q.includes('class') ? 'classroom' : undefined;
     const capMatch = q.match(/capacity\s*(?:of|>=?|at least)\s*(\d+)/i) || q.match(/(\d+)\s*(?:people|seats|capacity)/i);
     const minCap = capMatch ? parseInt(capMatch[1], 10) : undefined;
 
+    // Equipment filter (e.g. "projector", "whiteboard", "smart board", "computers")
+    const eq = [];
+    if (q.includes('projector')) eq.push('projector');
+    if (q.includes('whiteboard') || q.includes('white board')) eq.push('whiteboard');
+    if (q.includes('smart board') || q.includes('smartboard')) eq.push('smart board');
+    if (q.includes('computer')) eq.push('computers');
+    if (q.includes('ac')) eq.push('AC');
+
+    // Floor filter (e.g. "floor 7" or "on 8")
+    const floorMatch = q.match(/\b(?:floor|on)\s+(\d+)\b/i);
+    const floorNum = floorMatch && !/\bon \d{1,2}(?::\d{2})?\s*(am|pm)/i.test(q)
+      ? parseInt(floorMatch[1], 10)
+      : undefined;
+
     const roomCall = await executeAgentTool('get_rooms', {
       ...(typeFilter ? { type: typeFilter } : {}),
       ...(minCap ? { min_capacity: minCap } : {}),
+      ...(floorNum ? { floor: floorNum } : {}),
+      ...(eq.length > 0 ? { equipment: eq } : {}),
     });
     toolCalls.push(roomCall);
 
@@ -569,9 +649,9 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
     };
   }
 
-  // Fallback: generic campus help prompt
+  // Fallback: no intent matched (off-topic or unrecognized). Don't claim a lookup happened.
   return {
-    answer: `I looked up the live campus datastore. Could you please specify if you'd like information on **classes & schedules**, **available rooms**, **upcoming events**, **announcements**, or **assignments**?`,
+    answer: `I can help you with campus matters, but that's outside what I can look up here. Try asking about **class schedules**, **available rooms**, **upcoming events**, **announcements**, or **assignments**.`,
     toolCalls,
     providerUsed: 'Autonomous Tool-Calling Engine',
   };
