@@ -15,6 +15,18 @@ function readJsonFile<T>(filePath: string): T {
 }
 
 function loadSeedData(): CampusDatabase {
+  if (fs.existsSync(DB_FILE)) {
+    try {
+      const data = fs.readFileSync(DB_FILE, 'utf-8');
+      const parsed = JSON.parse(data);
+      if (parsed && parsed.schedules && parsed.rooms && parsed.events && parsed.announcements && parsed.assignments) {
+        return parsed;
+      }
+    } catch (err) {
+      console.error('Failed reading existing campusos_db.json:', err);
+    }
+  }
+
   const schedules: Schedule[] = readJsonFile(path.join(DATA_DIR, 'schedules.json'));
   const rooms: Room[] = readJsonFile(path.join(DATA_DIR, 'rooms.json'));
   const events: EventItem[] = readJsonFile(path.join(DATA_DIR, 'events.json'));
@@ -93,6 +105,10 @@ export function saveDatabase(db: CampusDatabase): void {
 }
 
 export function resetDatabase(): CampusDatabase {
+  inMemoryDb = null;
+  if (fs.existsSync(TMP_DB_FILE)) {
+    try { fs.unlinkSync(TMP_DB_FILE); } catch {}
+  }
   const seed = loadSeedData();
   saveDatabase(seed);
   return seed;
