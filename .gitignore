@@ -19,6 +19,7 @@ out/
 # Editors
 .vscode/
 .idea/
+.vs/
 *.swp
 
 # OS
