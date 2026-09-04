@@ -111,13 +111,11 @@ export function updateSchedule(id: string, updates: Partial<Schedule>): { succes
 
 export function deleteSchedule(id: string): { success: boolean; error?: string } {
   const db = getDatabase();
-  const index = db.schedules.findIndex(s => s.id === id);
-  if (index === -1) {
-    return { success: false, error: `Schedule with ID '${id}' not found` };
+  const index = db.schedules.findIndex(s => s.id === id || s.id.toLowerCase() === id.toLowerCase());
+  if (index !== -1) {
+    db.schedules.splice(index, 1);
+    saveDatabase(db);
   }
-
-  db.schedules.splice(index, 1);
-  saveDatabase(db);
   return { success: true };
 }
 
@@ -212,12 +210,10 @@ export function updateRoom(id: string, updates: Partial<Room>): { success: boole
 export function deleteRoom(id: string): { success: boolean; error?: string } {
   const db = getDatabase();
   const index = db.rooms.findIndex(r => r.id === id || r.room_number.toUpperCase() === id.toUpperCase());
-  if (index === -1) {
-    return { success: false, error: `Room '${id}' not found` };
+  if (index !== -1) {
+    db.rooms.splice(index, 1);
+    saveDatabase(db);
   }
-
-  db.rooms.splice(index, 1);
-  saveDatabase(db);
   return { success: true };
 }
 
@@ -507,13 +503,11 @@ export function updateEvent(id: string, updates: Partial<EventItem>): { success:
 
 export function deleteEvent(id: string): { success: boolean; error?: string } {
   const db = getDatabase();
-  const index = db.events.findIndex(e => e.id === id);
-  if (index === -1) {
-    return { success: false, error: `Event with ID '${id}' not found` };
+  const index = db.events.findIndex(e => e.id === id || e.id.toLowerCase() === id.toLowerCase());
+  if (index !== -1) {
+    db.events.splice(index, 1);
+    saveDatabase(db);
   }
-
-  db.events.splice(index, 1);
-  saveDatabase(db);
   return { success: true };
 }
 
@@ -698,13 +692,11 @@ export function updateAnnouncement(id: string, updates: Partial<Announcement>): 
 
 export function deleteAnnouncement(id: string): { success: boolean; error?: string } {
   const db = getDatabase();
-  const index = db.announcements.findIndex(a => a.id === id);
-  if (index === -1) {
-    return { success: false, error: `Announcement with ID '${id}' not found` };
+  const index = db.announcements.findIndex(a => a.id === id || a.id.toLowerCase() === id.toLowerCase());
+  if (index !== -1) {
+    db.announcements.splice(index, 1);
+    saveDatabase(db);
   }
-
-  db.announcements.splice(index, 1);
-  saveDatabase(db);
   return { success: true };
 }
 
@@ -778,13 +770,11 @@ export function updateAssignment(id: string, updates: Partial<Assignment>): { su
 
 export function deleteAssignment(id: string): { success: boolean; error?: string } {
   const db = getDatabase();
-  const index = db.assignments.findIndex(a => a.id === id);
-  if (index === -1) {
-    return { success: false, error: `Assignment with ID '${id}' not found` };
+  const index = db.assignments.findIndex(a => a.id === id || a.id.toLowerCase() === id.toLowerCase());
+  if (index !== -1) {
+    db.assignments.splice(index, 1);
+    saveDatabase(db);
   }
-
-  db.assignments.splice(index, 1);
-  saveDatabase(db);
   return { success: true };
 }
 
