@@ -658,21 +658,27 @@ export async function processAgentQuery(params: {
     };
   }
 
-  // 3. Determine if an external API key is available
-  const apiKey =
-    params.clientApiKey ||
-    process.env.OPENAI_API_KEY ||
-    process.env.GROQ_API_KEY ||
-    process.env.GOOGLE_API_KEY ||
-    process.env.ANTHROPIC_API_KEY;
+  // 3. Determine the requested external provider and use its matching key.
+  // The built-in engine must remain the default when it is selected in the UI.
+  type ExternalProvider = 'openai' | 'groq';
+  const requestedProvider = params.clientProvider?.trim().toLowerCase();
+  let provider: ExternalProvider | undefined;
 
-  if (apiKey && apiKey !== 'your_key_here' && apiKey !== 'your_openai_key') {
-    let provider: 'openai' | 'groq' | 'anthropic' | 'gemini' = 'openai';
-    if (params.clientProvider) {
-      provider = params.clientProvider as any;
-    } else if (process.env.GROQ_API_KEY && !process.env.OPENAI_API_KEY) {
+  if (requestedProvider === 'openai' || requestedProvider === 'groq') {
+    provider = requestedProvider;
+  } else if (!requestedProvider || requestedProvider === 'autonomous engine') {
+    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_key_here' && process.env.OPENAI_API_KEY !== 'your_openai_key') {
+      provider = 'openai';
+    } else if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'your_key_here' && process.env.GROQ_API_KEY !== 'your_groq_key') {
       provider = 'groq';
     }
+  }
+
+  const configuredKey = provider === 'groq' ? process.env.GROQ_API_KEY : provider === 'openai' ? process.env.OPENAI_API_KEY : undefined;
+  const clientKey = params.clientApiKey?.trim().replace(/^Bearer\s+/i, '');
+  const apiKey = clientKey || configuredKey;
+
+  if (provider && apiKey && apiKey !== 'your_key_here' && apiKey !== 'your_openai_key' && apiKey !== 'your_groq_key') {
 
     try {
       return await callExternalLlm(query, history, apiKey, provider);
