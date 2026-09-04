@@ -92,7 +92,7 @@ export const AGENT_TOOLS_DEFINITIONS = [
     type: 'function',
     function: {
       name: 'get_rooms',
-      description: 'Get campus rooms (classrooms, labs, seminar halls) with capacity and equipment details.',
+      description: 'List or search campus rooms (classrooms, labs, seminar halls). Use this tool when the user asks about available rooms, free rooms, room availability, which rooms are open, room capacity, room equipment, or wants to browse all rooms. Call with no filters to list all rooms.',
       parameters: {
         type: 'object',
         properties: {

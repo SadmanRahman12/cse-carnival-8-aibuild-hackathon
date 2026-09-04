@@ -24,7 +24,7 @@ async function runTests() {
   const t1 = await askAgent('When is my next class?');
   console.log('Agent Answer:', t1.answer);
   console.log('Tool Calls:', t1.toolCalls.map(t => `${t.tool} -> count: ${t.result?.count || 'ok'}`));
-  console.log('Passed:', t1.toolCalls.length > 0 && (t1.answer.includes('Cyber Security') || t1.answer.includes('Pattern Recognition')));
+  console.log('Passed:', t1.toolCalls.length > 0 && t1.toolCalls.some(t => t.tool === 'get_schedule') && t1.answer.includes('Your next class is'));
   console.log();
 
   // 2. Simple lookup test: "What classes do I have on Wednesday?"

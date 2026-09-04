@@ -21,6 +21,21 @@ function formatTime12(time24: string): string {
   return `${h12}:${mStr} ${ampm}`;
 }
 
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const SCHOOL_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+
+function getTodayName(): string {
+  return DAY_NAMES[new Date().getDay()];
+}
+
+// Get current time in 24h HH:MM format from the real system clock
+function getCurrentTime24(): string {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+}
+
 // Autonomous Built-in Tool Calling Engine (Zero External Dependencies)
 async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
   const q = query.toLowerCase();
@@ -340,22 +355,44 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
 
   // 6. Simple Lookup: "When is my next class?"
   if (q.includes('next class')) {
-    // Current time simulation: Sunday 11:00 AM
-    const schedCall = await executeAgentTool('get_schedule', { day: 'Sunday' });
+    const now = getCurrentTime24();
+    const todayName = getTodayName();
+
+    // Check today first
+    const schedCall = await executeAgentTool('get_schedule', { day: todayName });
     toolCalls.push(schedCall);
 
-    const classes = (schedCall.result.schedules || []).filter((s: any) => s.start_time >= '11:00');
-    if (classes.length === 0) {
+    const todayClasses = (schedCall.result.schedules || [])
+      .filter((s: any) => s.start_time > now);
+
+    if (todayClasses.length > 0) {
+      const next = todayClasses[0];
       return {
-        answer: "You don't have any more classes scheduled for today.",
+        answer: `Your next class is **${next.course} — ${next.title}** today at **${formatTime12(next.start_time)}** in **Room ${next.room}** (Instructor: ${next.instructor}, Section ${next.section}).`,
         toolCalls,
         providerUsed: 'Autonomous Tool-Calling Engine',
       };
     }
 
-    const next = classes[0];
+    // No more classes today — look ahead to the next school day
+    const todayIdx = SCHOOL_DAYS.indexOf(todayName);
+    for (let offset = 1; offset <= SCHOOL_DAYS.length; offset++) {
+      const nextDay = SCHOOL_DAYS[(todayIdx + offset) % SCHOOL_DAYS.length];
+      const nextDayCall = await executeAgentTool('get_schedule', { day: nextDay });
+      toolCalls.push(nextDayCall);
+      const nextDayClasses = nextDayCall.result.schedules || [];
+      if (nextDayClasses.length > 0) {
+        const next = nextDayClasses[0];
+        return {
+          answer: `No more classes today. Your next class is **${next.course} — ${next.title}** on **${next.day}** at **${formatTime12(next.start_time)}** in **Room ${next.room}** (Instructor: ${next.instructor}, Section ${next.section}).`,
+          toolCalls,
+          providerUsed: 'Autonomous Tool-Calling Engine',
+        };
+      }
+    }
+
     return {
-      answer: `Your next class is **${next.course} — ${next.title}** today at **${formatTime12(next.start_time)}** in **Room ${next.room}** (Instructor: ${next.instructor}, Section ${next.section}).`,
+      answer: "You don't have any classes scheduled for the rest of the week.",
       toolCalls,
       providerUsed: 'Autonomous Tool-Calling Engine',
     };
@@ -477,6 +514,44 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
     }
   }
 
+  // 10a. Room availability / room listing: "available rooms?", "what rooms are free?", "show me available rooms"
+  if (
+    q.includes('room') && (
+      q.includes('available') || q.includes('free') || q.includes('open') ||
+      q.includes('availability') || q.includes('which room') || q.includes('show me') ||
+      q.includes('list room') || q.includes('all room')
+    )
+  ) {
+    const typeFilter = q.includes('lab') ? 'lab' : q.includes('seminar') ? 'seminar' : q.includes('class') ? 'classroom' : undefined;
+    const capMatch = q.match(/capacity\s*(?:of|>=?|at least)\s*(\d+)/i) || q.match(/(\d+)\s*(?:people|seats|capacity)/i);
+    const minCap = capMatch ? parseInt(capMatch[1], 10) : undefined;
+
+    const roomCall = await executeAgentTool('get_rooms', {
+      ...(typeFilter ? { type: typeFilter } : {}),
+      ...(minCap ? { min_capacity: minCap } : {}),
+    });
+    toolCalls.push(roomCall);
+
+    const rooms = roomCall.result.rooms || [];
+    if (rooms.length === 0) {
+      return {
+        answer: 'No rooms matched your criteria. Try broadening your search or removing filters.',
+        toolCalls,
+        providerUsed: 'Autonomous Tool-Calling Engine',
+      };
+    }
+
+    const roomListStr = rooms
+      .map((r: any) => `• **Room ${r.room_number}** (Floor ${r.floor}) — ${r.type} | Capacity: ${r.capacity} seats | Equipment: ${r.equipment.join(', ')}`)
+      .join('\n');
+
+    return {
+      answer: `Here are the available campus rooms (${rooms.length} found):\n\n${roomListStr}`,
+      toolCalls,
+      providerUsed: 'Autonomous Tool-Calling Engine',
+    };
+  }
+
   // 11. Generic Events query: "What events are coming up?"
   if (q.includes('event') || q.includes('hackathon') || q.includes('workshop')) {
     const evCall = await executeAgentTool('get_events', { status: 'upcoming' });
@@ -494,10 +569,7 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
     };
   }
 
-  // Fallback: search announcements & schedules
-  const fallbackAnn = await executeAgentTool('get_announcements', { active_only: true });
-  toolCalls.push(fallbackAnn);
-
+  // Fallback: generic campus help prompt
   return {
     answer: `I looked up the live campus datastore. Could you please specify if you'd like information on **classes & schedules**, **available rooms**, **upcoming events**, **announcements**, or **assignments**?`,
     toolCalls,
