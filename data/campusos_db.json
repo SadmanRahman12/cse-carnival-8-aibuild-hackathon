@@ -1,0 +1,910 @@
+{
+  "schedules": [
+    {
+      "id": "sch-001",
+      "course": "CSE 4113",
+      "title": "Pattern Recognition and Machine Learning",
+      "day": "Sunday",
+      "start_time": "13:00",
+      "end_time": "13:50",
+      "room": "7A07",
+      "instructor": "Prof. Dr. Md. Shahriar Mahbub",
+      "section": "B"
+    },
+    {
+      "id": "sch-002",
+      "course": "CSE 4173",
+      "title": "Cyber Security",
+      "day": "Sunday",
+      "start_time": "11:20",
+      "end_time": "12:10",
+      "room": "7A03",
+      "instructor": "Prof. Dr. Md. Shamim Akhter",
+      "section": "CS"
+    },
+    {
+      "id": "sch-003",
+      "course": "CSE 4114",
+      "title": "Pattern Recognition and Machine Learning Lab",
+      "day": "Sunday",
+      "start_time": "13:00",
+      "end_time": "14:40",
+      "room": "7B08",
+      "instructor": "Prof. Dr. Md. Shahriar Mahbub",
+      "section": "B1/B2"
+    },
+    {
+      "id": "sch-004",
+      "course": "CSE 4129",
+      "title": "Formal Languages and Compilers",
+      "day": "Sunday",
+      "start_time": "08:00",
+      "end_time": "08:50",
+      "room": "7A05",
+      "instructor": "Ms. Nusrat Jahan",
+      "section": "B"
+    },
+    {
+      "id": "sch-005",
+      "course": "IPE 4111",
+      "title": "Industrial Management",
+      "day": "Sunday",
+      "start_time": "09:40",
+      "end_time": "10:30",
+      "room": "7A05",
+      "instructor": "TBA",
+      "section": "B"
+    },
+    {
+      "id": "sch-006",
+      "course": "CSE 4113",
+      "title": "Pattern Recognition and Machine Learning",
+      "day": "Sunday",
+      "start_time": "10:30",
+      "end_time": "11:20",
+      "room": "7A03",
+      "instructor": "Prof. Dr. Md. Shahriar Mahbub",
+      "section": "B"
+    },
+    {
+      "id": "sch-007",
+      "course": "CSE 4137",
+      "title": "Soft Computing",
+      "day": "Monday",
+      "start_time": "16:20",
+      "end_time": "17:10",
+      "room": "7A03",
+      "instructor": "Prof. Dr. Faisal Muhammad Shah",
+      "section": "B"
+    },
+    {
+      "id": "sch-008",
+      "course": "CSE 4141",
+      "title": "Data Warehousing and Mining",
+      "day": "Monday",
+      "start_time": "17:10",
+      "end_time": "18:00",
+      "room": "7A03",
+      "instructor": "Mr. Saha Reno",
+      "section": "DWM"
+    },
+    {
+      "id": "sch-009",
+      "course": "CSE 4113",
+      "title": "Pattern Recognition and Machine Learning",
+      "day": "Monday",
+      "start_time": "13:00",
+      "end_time": "13:50",
+      "room": "7A07",
+      "instructor": "Prof. Dr. Md. Shahriar Mahbub",
+      "section": "B"
+    },
+    {
+      "id": "sch-010",
+      "course": "CSE 4173",
+      "title": "Cyber Security",
+      "day": "Monday",
+      "start_time": "13:50",
+      "end_time": "14:40",
+      "room": "7A07",
+      "instructor": "Prof. Dr. Md. Shamim Akhter",
+      "section": "CS"
+    },
+    {
+      "id": "sch-011",
+      "course": "IPE 4111",
+      "title": "Industrial Management",
+      "day": "Tuesday",
+      "start_time": "08:00",
+      "end_time": "08:50",
+      "room": "7C07",
+      "instructor": "TBA",
+      "section": "B"
+    },
+    {
+      "id": "sch-012",
+      "course": "IPE 4111",
+      "title": "Industrial Management",
+      "day": "Tuesday",
+      "start_time": "08:50",
+      "end_time": "09:40",
+      "room": "7C07",
+      "instructor": "TBA",
+      "section": "B"
+    },
+    {
+      "id": "sch-013",
+      "course": "CSE 4138",
+      "title": "Soft Computing Lab",
+      "day": "Tuesday",
+      "start_time": "11:20",
+      "end_time": "13:00",
+      "room": "7B01",
+      "instructor": "Mr. Raihan Tanvir",
+      "section": "B1/B2"
+    },
+    {
+      "id": "sch-014",
+      "course": "CSE 4130",
+      "title": "Formal Languages and Compilers Lab",
+      "day": "Wednesday",
+      "start_time": "08:00",
+      "end_time": "09:40",
+      "room": "7B06",
+      "instructor": "Ms. Nusrat Jahan",
+      "section": "B1/B2"
+    },
+    {
+      "id": "sch-015",
+      "course": "CSE 4113",
+      "title": "Pattern Recognition and Machine Learning",
+      "day": "Wednesday",
+      "start_time": "13:00",
+      "end_time": "13:50",
+      "room": "7A04",
+      "instructor": "Prof. Dr. Md. Shahriar Mahbub",
+      "section": "B"
+    },
+    {
+      "id": "sch-016",
+      "course": "CSE 4141",
+      "title": "Data Warehousing and Mining",
+      "day": "Wednesday",
+      "start_time": "13:50",
+      "end_time": "15:30",
+      "room": "7A05",
+      "instructor": "Mr. Saha Reno",
+      "section": "DWM"
+    },
+    {
+      "id": "sch-017",
+      "course": "CSE 4173",
+      "title": "Cyber Security",
+      "day": "Wednesday",
+      "start_time": "13:50",
+      "end_time": "15:30",
+      "room": "7A04",
+      "instructor": "Prof. Dr. Md. Shamim Akhter",
+      "section": "CS"
+    },
+    {
+      "id": "sch-018",
+      "course": "CSE 4137",
+      "title": "Soft Computing",
+      "day": "Wednesday",
+      "start_time": "14:40",
+      "end_time": "15:30",
+      "room": "7A04",
+      "instructor": "Prof. Dr. Faisal Muhammad Shah",
+      "section": "B"
+    },
+    {
+      "id": "sch-019",
+      "course": "CSE 4141",
+      "title": "Data Warehousing and Mining",
+      "day": "Thursday",
+      "start_time": "09:40",
+      "end_time": "10:30",
+      "room": "7A03",
+      "instructor": "Mr. Saha Reno",
+      "section": "DWM"
+    },
+    {
+      "id": "sch-020",
+      "course": "CSE 4174",
+      "title": "Cyber Security Lab",
+      "day": "Thursday",
+      "start_time": "11:20",
+      "end_time": "13:00",
+      "room": "9A05",
+      "instructor": "Ms. Nawrin Tabassum",
+      "section": "CSGr-1"
+    },
+    {
+      "id": "sch-021",
+      "course": "CSE 4142",
+      "title": "Data Warehousing and Mining Lab",
+      "day": "Thursday",
+      "start_time": "11:20",
+      "end_time": "13:00",
+      "room": "7B08",
+      "instructor": "Mr. Saha Reno",
+      "section": "DWMGr-1"
+    },
+    {
+      "id": "sch-022",
+      "course": "CSE 4129",
+      "title": "Formal Languages and Compilers",
+      "day": "Thursday",
+      "start_time": "13:00",
+      "end_time": "13:50",
+      "room": "7A06",
+      "instructor": "Ms. Nusrat Jahan",
+      "section": "B"
+    },
+    {
+      "id": "sch-023",
+      "course": "CSE 4129",
+      "title": "Formal Languages and Compilers",
+      "day": "Thursday",
+      "start_time": "13:50",
+      "end_time": "14:40",
+      "room": "7A06",
+      "instructor": "Ms. Nusrat Jahan",
+      "section": "B"
+    },
+    {
+      "id": "sch-024",
+      "course": "CSE 4137",
+      "title": "Soft Computing",
+      "day": "Thursday",
+      "start_time": "14:40",
+      "end_time": "15:30",
+      "room": "7A06",
+      "instructor": "Prof. Dr. Faisal Muhammad Shah",
+      "section": "B"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "room-001",
+      "room_number": "7A01",
+      "type": "classroom",
+      "capacity": 40,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-002",
+      "room_number": "7A02",
+      "type": "classroom",
+      "capacity": 40,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-003",
+      "room_number": "7A03",
+      "type": "classroom",
+      "capacity": 45,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC",
+        "smart board"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-004",
+      "room_number": "7A04",
+      "type": "classroom",
+      "capacity": 45,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-005",
+      "room_number": "7A05",
+      "type": "classroom",
+      "capacity": 40,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-006",
+      "room_number": "7A06",
+      "type": "classroom",
+      "capacity": 40,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": [
+        {
+          "booking_id": "bk-001",
+          "booked_by": "Nusrat Jahan",
+          "date": "2026-09-07",
+          "start_time": "13:00",
+          "end_time": "14:40",
+          "purpose": "CSE 4129 Extra Class"
+        }
+      ]
+    },
+    {
+      "id": "room-007",
+      "room_number": "7A07",
+      "type": "classroom",
+      "capacity": 50,
+      "equipment": [
+        "whiteboard",
+        "projector",
+        "AC",
+        "document camera"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-008",
+      "room_number": "7B01",
+      "type": "lab",
+      "capacity": 30,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector",
+        "whiteboard"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-009",
+      "room_number": "7B02",
+      "type": "lab",
+      "capacity": 30,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-010",
+      "room_number": "7B03",
+      "type": "lab",
+      "capacity": 25,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-011",
+      "room_number": "7B04",
+      "type": "lab",
+      "capacity": 25,
+      "equipment": [
+        "computers",
+        "AC"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": [
+        {
+          "booking_id": "bk-002",
+          "booked_by": "Raihan Tanvir",
+          "date": "2026-09-05",
+          "start_time": "14:00",
+          "end_time": "16:00",
+          "purpose": "CSE 4138 Lab makeup"
+        }
+      ]
+    },
+    {
+      "id": "room-012",
+      "room_number": "7B05",
+      "type": "lab",
+      "capacity": 30,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector",
+        "whiteboard"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-013",
+      "room_number": "7B06",
+      "type": "lab",
+      "capacity": 30,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector",
+        "whiteboard"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-014",
+      "room_number": "7B07",
+      "type": "lab",
+      "capacity": 35,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector",
+        "smart board"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-015",
+      "room_number": "7B08",
+      "type": "lab",
+      "capacity": 35,
+      "equipment": [
+        "computers",
+        "AC",
+        "projector",
+        "whiteboard"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-016",
+      "room_number": "7C01",
+      "type": "seminar",
+      "capacity": 60,
+      "equipment": [
+        "projector",
+        "AC",
+        "whiteboard",
+        "microphone",
+        "podium"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-017",
+      "room_number": "7C02",
+      "type": "seminar",
+      "capacity": 60,
+      "equipment": [
+        "projector",
+        "AC",
+        "whiteboard",
+        "microphone"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": [
+        {
+          "booking_id": "bk-003",
+          "booked_by": "AUSTPIC",
+          "date": "2026-09-06",
+          "start_time": "15:00",
+          "end_time": "18:00",
+          "purpose": "Hackathon Orientation Session"
+        }
+      ]
+    },
+    {
+      "id": "room-018",
+      "room_number": "7C03",
+      "type": "seminar",
+      "capacity": 55,
+      "equipment": [
+        "projector",
+        "AC",
+        "whiteboard",
+        "microphone"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-019",
+      "room_number": "7C04",
+      "type": "seminar",
+      "capacity": 55,
+      "equipment": [
+        "projector",
+        "AC",
+        "whiteboard"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    },
+    {
+      "id": "room-020",
+      "room_number": "7C05",
+      "type": "seminar",
+      "capacity": 70,
+      "equipment": [
+        "projector",
+        "AC",
+        "whiteboard",
+        "microphone",
+        "podium",
+        "smart board"
+      ],
+      "floor": 7,
+      "status": "available",
+      "bookings": []
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-001",
+      "name": "AUSTPIC AI Build Hackathon",
+      "description": "24-hour hackathon focused on building AI-powered applications. Open to all CSE students.",
+      "date": "2026-09-10",
+      "start_time": "09:00",
+      "end_time": "09:00",
+      "end_date": "2026-09-11",
+      "venue": "7C01",
+      "organizer": "AUSTPIC",
+      "capacity": 60,
+      "registered": 47,
+      "registrations": [
+        {
+          "student_id": "20-40532",
+          "name": "Sakibul Hassan"
+        },
+        {
+          "student_id": "20-40511",
+          "name": "Farhan Ahmed"
+        },
+        {
+          "student_id": "20-40498",
+          "name": "Tasnia Islam"
+        }
+      ],
+      "status": "upcoming"
+    },
+    {
+      "id": "evt-002",
+      "name": "Guest Lecture: Deep Learning in Medical Imaging",
+      "description": "Industry talk by Dr. Iftekhar Ahmed (BUET) on practical applications of CNNs in Bangladeshi healthcare.",
+      "date": "2026-09-08",
+      "start_time": "14:00",
+      "end_time": "16:00",
+      "end_date": "2026-09-08",
+      "venue": "7C05",
+      "organizer": "CSE Department",
+      "capacity": 70,
+      "registered": 62,
+      "registrations": [
+        {
+          "student_id": "20-40532",
+          "name": "Sakibul Hassan"
+        },
+        {
+          "student_id": "21-41205",
+          "name": "Rafi Hossain"
+        }
+      ],
+      "status": "upcoming"
+    },
+    {
+      "id": "evt-003",
+      "name": "Soft Computing Mid-Term Review Session",
+      "description": "Extra prep session by FMS sir before the midterm. Covers fuzzy logic and neural network basics.",
+      "date": "2026-09-06",
+      "start_time": "16:00",
+      "end_time": "18:00",
+      "end_date": "2026-09-06",
+      "venue": "7A04",
+      "organizer": "Prof. Dr. Faisal Muhammad Shah",
+      "capacity": 45,
+      "registered": 38,
+      "registrations": [
+        {
+          "student_id": "20-40532",
+          "name": "Sakibul Hassan"
+        },
+        {
+          "student_id": "20-40511",
+          "name": "Farhan Ahmed"
+        }
+      ],
+      "status": "upcoming"
+    },
+    {
+      "id": "evt-004",
+      "name": "AUST CSE Carnival 8.0 Planning Meeting",
+      "description": "Volunteers and organizers meeting to finalize event lineup, venue layout, and task assignments for CSE Carnival.",
+      "date": "2026-09-05",
+      "start_time": "15:30",
+      "end_time": "17:00",
+      "end_date": "2026-09-05",
+      "venue": "7C02",
+      "organizer": "AUSTPIC",
+      "capacity": 30,
+      "registered": 22,
+      "registrations": [
+        {
+          "student_id": "20-40532",
+          "name": "Sakibul Hassan"
+        }
+      ],
+      "status": "upcoming"
+    },
+    {
+      "id": "evt-005",
+      "name": "Freshers' Orientation — CSE Fall 2026",
+      "description": "Welcome session for newly admitted CSE students. Department heads, club representatives, and senior students will speak.",
+      "date": "2026-09-12",
+      "start_time": "10:00",
+      "end_time": "13:00",
+      "end_date": "2026-09-12",
+      "venue": "7C05",
+      "organizer": "CSE Department",
+      "capacity": 70,
+      "registered": 55,
+      "registrations": [],
+      "status": "upcoming"
+    },
+    {
+      "id": "evt-006",
+      "name": "Workshop: Git & GitHub for Beginners",
+      "description": "Hands-on workshop covering Git basics, branching, pull requests, and open-source contribution workflow.",
+      "date": "2026-09-07",
+      "start_time": "13:00",
+      "end_time": "15:00",
+      "end_date": "2026-09-07",
+      "venue": "7B05",
+      "organizer": "AUSTPIC",
+      "capacity": 30,
+      "registered": 30,
+      "registrations": [
+        {
+          "student_id": "21-41205",
+          "name": "Rafi Hossain"
+        }
+      ],
+      "status": "full"
+    },
+    {
+      "id": "evt-007",
+      "name": "Inter-University Programming Contest (IUPC) Selection",
+      "description": "Internal selection round for AUST's IUPC team. Top performers will represent AUST.",
+      "date": "2026-09-13",
+      "start_time": "10:00",
+      "end_time": "13:00",
+      "end_date": "2026-09-13",
+      "venue": "7B06",
+      "organizer": "AUSTPIC",
+      "capacity": 30,
+      "registered": 18,
+      "registrations": [],
+      "status": "upcoming"
+    }
+  ],
+  "announcements": [
+    {
+      "id": "ann-001",
+      "title": "CSE 4113 Class Rescheduled — Sunday 7 Sep",
+      "body": "The CSE 4113 (Pattern Recognition) class scheduled for Sunday, 7th September at 1:00 PM in Room 7A07 has been moved to Room 7A04 at 3:30 PM on the same day. Students must attend the rescheduled slot. — Prof. Dr. Md. Shahriar Mahbub",
+      "date": "2026-09-04",
+      "priority": "high",
+      "posted_by": "Prof. Dr. Md. Shahriar Mahbub",
+      "expires": "2026-09-07"
+    },
+    {
+      "id": "ann-002",
+      "title": "CSE 4137 Midterm Syllabus",
+      "body": "Soft Computing midterm will cover: Fuzzy Sets and Logic (Chapters 1-3), Neural Networks basics (Chapter 4), and Genetic Algorithms introduction (Chapter 5). Exam date will be announced by the department. Refer to the course slides shared on Google Classroom. — Prof. Dr. Faisal Muhammad Shah",
+      "date": "2026-09-03",
+      "priority": "high",
+      "posted_by": "Prof. Dr. Faisal Muhammad Shah",
+      "expires": "2026-09-20"
+    },
+    {
+      "id": "ann-003",
+      "title": "IPE 4111 Instructor Update",
+      "body": "The instructor for IPE 4111 (Industrial Management) has been finalized. Classes will now be conducted by Mr. Md. Arif Hossain starting from next week. The class schedule and room remain unchanged. — CSE Department",
+      "date": "2026-09-02",
+      "priority": "medium",
+      "posted_by": "CSE Department",
+      "expires": "2026-09-10"
+    },
+    {
+      "id": "ann-004",
+      "title": "Library Closed — September 5 (Friday)",
+      "body": "The AUST Central Library will remain closed on Friday, 5th September 2026 due to maintenance work. All reading rooms, digital resource stations, and the lending counter will be unavailable. Normal operations resume on Saturday. — Library Authority",
+      "date": "2026-09-03",
+      "priority": "low",
+      "posted_by": "Library Authority",
+      "expires": "2026-09-05"
+    },
+    {
+      "id": "ann-005",
+      "title": "CSE 4130 Lab Assignment Submission Deadline Extended",
+      "body": "The deadline for CSE 4130 (Formal Languages and Compilers Lab) Assignment 2 has been extended to 10th September 2026 (Wednesday). Submit your report in PDF format on Google Classroom before 11:59 PM. No further extensions will be granted. — Ms. Nusrat Jahan / Ms. Tasnuva Binte Rahman",
+      "date": "2026-09-01",
+      "priority": "high",
+      "posted_by": "Ms. Nusrat Jahan",
+      "expires": "2026-09-10"
+    },
+    {
+      "id": "ann-006",
+      "title": "AUSTPIC Membership Drive — Fall 2026",
+      "body": "AUST Programming and Informatics Club (AUSTPIC) is now accepting new members for the Fall 2026 semester. All CSE students are eligible. Fill out the Google Form (link in bio) before 8th September. Selected members will be notified via email. — AUSTPIC",
+      "date": "2026-09-01",
+      "priority": "medium",
+      "posted_by": "AUSTPIC",
+      "expires": "2026-09-08"
+    },
+    {
+      "id": "ann-007",
+      "title": "Canteen Price Update — Effective Immediately",
+      "body": "Due to recent supply cost increases, canteen prices have been revised. Full lunch meal is now BDT 80 (previously BDT 65). Snacks and beverages remain unchanged. We apologize for the inconvenience. — AUST Canteen Management",
+      "date": "2026-08-30",
+      "priority": "low",
+      "posted_by": "AUST Administration",
+      "expires": "2026-12-31"
+    },
+    {
+      "id": "ann-008",
+      "title": "Emergency: Water Supply Disruption — Building 7",
+      "body": "Due to an emergency pipe repair, water supply to the 7th floor (Building 7) will be disrupted on Saturday, 6th September from 8:00 AM to 1:00 PM. Students are advised to carry water. Labs and classrooms on this floor will remain operational. — Maintenance Department",
+      "date": "2026-09-04",
+      "priority": "high",
+      "posted_by": "Maintenance Department",
+      "expires": "2026-09-06"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "asgn-001",
+      "course": "CSE 4113",
+      "course_title": "Pattern Recognition and Machine Learning",
+      "title": "Assignment 1: Bayes Classifier Implementation",
+      "description": "Implement a Naive Bayes classifier from scratch in Python. Use the provided Iris dataset. Submit your .ipynb file and a 1-page PDF report. No sklearn for the classifier itself.",
+      "assigned_date": "2026-08-28",
+      "deadline": "2026-09-09",
+      "submission_platform": "Google Classroom",
+      "status": "pending",
+      "marks": 10
+    },
+    {
+      "id": "asgn-002",
+      "course": "CSE 4130",
+      "course_title": "Formal Languages and Compilers Lab",
+      "title": "Assignment 2: Lexical Analyzer using Flex",
+      "description": "Write a lexical analyzer for a subset of C language using Flex (Fast Lexical Analyzer). Your analyzer must correctly tokenize keywords, identifiers, operators, and literals. Submit your .l file and a test run screenshot.",
+      "assigned_date": "2026-08-25",
+      "deadline": "2026-09-10",
+      "submission_platform": "Google Classroom",
+      "status": "pending",
+      "marks": 15
+    },
+    {
+      "id": "asgn-003",
+      "course": "CSE 4137",
+      "course_title": "Soft Computing",
+      "title": "Term Paper: Fuzzy Logic Application in Real Life",
+      "description": "Write a 2000-word term paper on a real-world application of fuzzy logic (e.g., washing machines, traffic control, medical diagnosis). Include diagrams, membership functions, and a brief comparison with crisp logic.",
+      "assigned_date": "2026-08-20",
+      "deadline": "2026-09-15",
+      "submission_platform": "Physical submission to FMS sir",
+      "status": "pending",
+      "marks": 20
+    },
+    {
+      "id": "asgn-004",
+      "course": "CSE 4142",
+      "course_title": "Data Warehousing and Mining Lab",
+      "title": "Lab Report 1: Data Preprocessing with WEKA",
+      "description": "Perform data preprocessing on the provided sales dataset using WEKA. Apply normalization, handle missing values, and discretize attributes. Submit a lab report with screenshots of each step.",
+      "assigned_date": "2026-08-27",
+      "deadline": "2026-09-07",
+      "submission_platform": "Physical submission",
+      "status": "submitted",
+      "marks": 10
+    },
+    {
+      "id": "asgn-005",
+      "course": "CSE 4173",
+      "course_title": "Cyber Security",
+      "title": "Assignment 1: CIA Triad Analysis of a Real Breach",
+      "description": "Choose a well-documented cybersecurity breach (e.g., Sony Pictures, Equifax). Analyze it using the CIA Triad framework. Discuss which pillars were violated, how, and what preventive measures could have been taken. 1500 words max.",
+      "assigned_date": "2026-08-29",
+      "deadline": "2026-09-11",
+      "submission_platform": "Google Classroom",
+      "status": "pending",
+      "marks": 10
+    },
+    {
+      "id": "asgn-006",
+      "course": "CSE 4129",
+      "course_title": "Formal Languages and Compilers",
+      "title": "Problem Set 1: DFA and NFA Construction",
+      "description": "Solve 5 problems on constructing DFAs and NFAs for given languages. Also convert the given NFA to DFA using the subset construction method. Show all states and transitions clearly.",
+      "assigned_date": "2026-08-26",
+      "deadline": "2026-09-04",
+      "submission_platform": "Physical submission in class",
+      "status": "submitted",
+      "marks": 10
+    },
+    {
+      "id": "asgn-007",
+      "course": "CSE 4141",
+      "course_title": "Data Warehousing and Mining",
+      "title": "Assignment 1: Data Warehouse Schema Design",
+      "description": "Design a star schema and snowflake schema for a fictional e-commerce company. Identify fact tables, dimension tables, and define all attributes. Submit as a PDF with ER diagrams.",
+      "assigned_date": "2026-09-01",
+      "deadline": "2026-09-14",
+      "submission_platform": "Google Classroom",
+      "status": "pending",
+      "marks": 15
+    },
+    {
+      "id": "asgn-008",
+      "course": "CSE 4114",
+      "course_title": "Pattern Recognition and Machine Learning Lab",
+      "title": "Lab Assignment 1: Feature Extraction and Visualization",
+      "description": "Using the MNIST dataset, extract features using PCA and t-SNE. Plot the results and compare. Submit your .ipynb and a brief PDF analysis. Use Python with sklearn and matplotlib.",
+      "assigned_date": "2026-09-03",
+      "deadline": "2026-09-17",
+      "submission_platform": "Google Classroom",
+      "status": "pending",
+      "marks": 10
+    }
+  ]
+}
