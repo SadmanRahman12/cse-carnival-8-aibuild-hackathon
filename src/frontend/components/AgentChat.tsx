@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Wrench, ChevronDown, ChevronUp, AlertOctagon, HelpCircle, CheckCircle2, Sparkles, X, RefreshCw } from 'lucide-react';
+import { Send, Bot, User, AlertOctagon, HelpCircle, CheckCircle2, Sparkles, X, RefreshCw } from 'lucide-react';
 import { ChatMessage, ToolCallLog } from '@/backend/types';
 
 interface AgentChatProps {
@@ -42,7 +42,6 @@ export const AgentChat: React.FC<AgentChatProps> = ({
   ]);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
-  const [expandedTools, setExpandedTools] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,10 +49,6 @@ export const AgentChat: React.FC<AgentChatProps> = ({
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isOpen]);
-
-  const toggleToolExpand = (toolId: string) => {
-    setExpandedTools((prev) => ({ ...prev, [toolId]: !prev[toolId] }));
-  };
 
   const handleSend = async (queryText?: string) => {
     const textToSend = (queryText || inputValue).trim();
@@ -224,66 +219,6 @@ export const AgentChat: React.FC<AgentChatProps> = ({
 
                 {/* Message Body */}
                 <div className="whitespace-pre-wrap font-sans">{msg.content}</div>
-
-                {/* Real-time Tool Call Badges */}
-                {msg.toolCalls && msg.toolCalls.length > 0 && (
-                  <div className="mt-3 pt-2.5 border-t border-slate-800/80 space-y-2">
-                    <div className="flex items-center space-x-1.5 text-[11px] font-bold text-teal-400">
-                      <Wrench className="w-3 h-3" />
-                      <span>Executed Backend Tools ({msg.toolCalls.length}):</span>
-                    </div>
-
-                    {msg.toolCalls.map((tc) => {
-                      const isExpanded = expandedTools[tc.id];
-                      const isRefused = tc.status === 'refused';
-                      return (
-                        <div
-                          key={tc.id}
-                          className="bg-slate-900 border border-slate-800 rounded-lg p-2 text-[11px] font-mono"
-                        >
-                          <div
-                            onClick={() => toggleToolExpand(tc.id)}
-                            className="flex items-center justify-between cursor-pointer hover:text-white"
-                          >
-                            <span className="text-emerald-400 font-semibold">{tc.tool}</span>
-                            <div className="flex items-center space-x-1.5">
-                              <span
-                                className={`text-[10px] px-1.5 py-0.2 rounded font-sans uppercase ${
-                                  isRefused
-                                    ? 'bg-rose-500/20 text-rose-400'
-                                    : 'bg-emerald-500/20 text-emerald-400'
-                                }`}
-                              >
-                                {tc.status}
-                              </span>
-                              {isExpanded ? (
-                                <ChevronUp className="w-3 h-3 text-slate-400" />
-                              ) : (
-                                <ChevronDown className="w-3 h-3 text-slate-400" />
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Expanded Arguments & Result Inspector */}
-                          {isExpanded && (
-                            <div className="mt-2 pt-2 border-t border-slate-800 text-[10px] space-y-1 overflow-x-auto">
-                              <div>
-                                <span className="text-slate-500">Arguments: </span>
-                                <span className="text-amber-300">{JSON.stringify(tc.args)}</span>
-                              </div>
-                              <div>
-                                <span className="text-slate-500">Result: </span>
-                                <pre className="text-slate-300 max-h-40 overflow-y-auto whitespace-pre-wrap">
-                                  {JSON.stringify(tc.result, null, 2)}
-                                </pre>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
               </div>
             </div>
           );
