@@ -1,42 +1,103 @@
 # CampusOS — Intelligent University Operating System
 
 > **CSE Carnival 8.0 · AI Build Hackathon**  
-> An intelligent university platform combining a live **Data Manager (truth layer)** with an autonomous **AI Agent (brain layer)** querying the exact same persistent backend.
+> An intelligent university operating system combining a live **Data Manager (truth layer)** with an autonomous **AI Agent (brain layer)** querying and mutating the exact same persistent backend.
 
 ---
 
-## 🚀 Quick Start (Copy-Pasteable Setup)
+## 📌 Project Overview
+
+CampusOS is an intelligent university management application designed to unify campus data governance and conversational AI into a single synchronous system. It provides an intuitive Data Manager interface for managing Schedules, Rooms & Labs, Events, Announcements, and Assignments alongside a sidebar AI Agent capable of natural language queries and automated actions. How it works: both the human UI and the AI Agent execute operations through the exact same TypeScript services (`src/backend/services.ts`) backed by a persistent file datastore (`data/campusos_db.json`), enforcing 4-gate booking validations, event capacity ceilings, and multi-filter searches with zero data drift or stale state.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Languages**: TypeScript, JavaScript, HTML5, CSS3
+- **Frameworks & Libraries**: Next.js 14 (App Router), React 18, Tailwind CSS, Lucide React, clsx, tailwind-merge
+- **LLM Engine & Models**: Built-in Autonomous Tool-Calling Engine (works 100% offline with zero external API key requirements), with multi-provider integration supporting OpenAI (`gpt-4o` / `gpt-4o-mini`), Groq (`llama-3.3-70b-versatile`), Anthropic, and Google Gemini.
+- **Database**: File-backed atomic JSON datastore (`data/campusos_db.json`), pre-seeded from `/data/*.json` files.
+
+---
+
+## ⚙️ Setup Instructions
+
+Follow these exact commands to install dependencies and start the application:
 
 ### 1. Prerequisites
-- **Node.js**: v18.0.0 or higher (v20+ recommended, tested on Node v24)
-- **npm**: v9+ (tested on npm 11)
+- **Node.js**: v18.0.0 or higher (v20+ recommended)
+- **npm**: v9+
 
 ### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 3. Environment Variables (Optional)
-CampusOS works **100% out of the box with zero external API keys** using its built-in **Autonomous Tool-Calling Engine**.
-
-If you wish to use frontier LLM providers (OpenAI / Groq), copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-And populate your keys:
-```env
-OPENAI_API_KEY=your_openai_key_here
-# or
-GROQ_API_KEY=your_groq_key_here
-```
-*(You can also set or switch providers anytime directly inside the UI via the top-bar **Settings / Key** modal).*
-
-### 4. Run the Platform
+### 3. Start the Application
 ```bash
 npm run dev
 ```
 
-Open **[http://localhost:3000](http://localhost:3000)** in your browser.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser to view the app.
+
+### Helper Commands
+- **Reset Database to Initial Seeds**:
+  ```bash
+  npm run reset-db
+  ```
+- **Run Automated Test Suite**:
+  ```bash
+  node test_eval.js
+  ```
+
+---
+
+## 🔐 Environment Variables
+
+CampusOS works **100% out of the box with zero external API keys** using its built-in Autonomous Engine. If you wish to use external LLM providers, copy `.env.example` to create a `.env` file:
+
+```bash
+cp .env.example .env
+```
+
+Every environment variable supported by CampusOS is listed below:
+
+| Environment Variable | Description | Sample / Format | Required |
+|---|---|---|---|
+| `OPENAI_API_KEY` | OpenAI API key for `gpt-4o` / `gpt-4o-mini` | `sk-proj-...` | Optional |
+| `GROQ_API_KEY` | Groq API key for Llama-3 models | `gsk_...` | Optional |
+| `ANTHROPIC_API_KEY` | Anthropic API key for Claude models | `sk-ant-...` | Optional |
+| `GOOGLE_API_KEY` | Google Gemini API key | `AIzaSy...` | Optional |
+| `DATABASE_URL` | Path to persistent JSON database file | `data/campusos_db.json` | Optional |
+| `PORT` | Local web server port | `3000` | Optional |
+
+> **⚠️ Note**: Do not commit real API keys to repository version control. The `.env` file is excluded in `.gitignore`.
+
+---
+
+## 🤖 How to Use the Agent
+
+Click the **AI Agent** button at the top right of the navigation header to open the AI drawer. You can interact with the agent using natural language questions across several categories:
+
+- **Simple Lookups**:
+  - *"When is my next class?"*
+  - *"What classes do I have on Wednesday?"*
+  - *"What assignments are due this week?"*
+  - *"Show me all high priority announcements."*
+
+- **Multi-Source Combining**:
+  - *"I'm free until 2 PM — is there anything on campus I could drop into?"* (Calculates schedule gaps and matches with active events and empty study rooms).
+
+- **Multi-Filter Searches**:
+  - *"Which labs have a projector and can fit at least 30 people?"*
+
+- **Validated Actions & Reservations**:
+  - *"Book Room 7A02 tomorrow from 3 PM to 5 PM for group study."*
+  - *"Register me for the Workshop: Git & GitHub for Beginners."*
+
+- **Safety Refusals & Clarifications**:
+  - Double booking a room or exceeding event capacity will trigger automatic refusal messages with reasons.
+  - Ambiguous inputs (e.g. *"Book me a room tomorrow"*) will ask for clarification on time and capacity before committing.
 
 ---
 
@@ -66,7 +127,7 @@ When the page loads:
 
 ---
 
-## 🎯 The Non-Negotiable Canonical Acceptance Test
+## 🎯 The Canonical Acceptance Test
 
 ### Test Objective:
 Prove that the Data Manager and AI Agent share **one live backend with zero caching, zero retraining, and zero data drift**.
@@ -86,24 +147,6 @@ Prove that the Data Manager and AI Agent share **one live backend with zero cach
 6. **Result**: The agent immediately checks the live datastore and returns:
    > *"🔔 Important Notice regarding CSE 4113: CSE 4113 Class MOVED to Room 7C03 at 4:00 PM — Live Test..."*
 7. **Reload the page (`F5`)**: Notice the change persists permanently across browser reloads and server restarts.
-
----
-
-## 🧠 Sample Evaluation Queries Handled by the Agent
-
-| Capability | Sample Query | What the Agent Does |
-|---|---|---|
-| **Simple Lookup** | *"When is my next class?"* | Calls `get_schedule(day: "Sunday")`, derives current time, returns next scheduled lecture. |
-| **Simple Lookup** | *"What classes do I have on Wednesday?"* | Calls `get_schedule(day: "Wednesday")`, formats timetable with rooms and teachers. |
-| **Simple Lookup** | *"What assignments do I have due this week?"* | Calls `get_assignments(status: "pending")`, filters by deadline. |
-| **Simple Lookup** | *"Show me all high priority announcements."* | Calls `get_announcements(priority: "high")`, displays urgent notices. |
-| **Multi-Source Combine** | *"I'm free until 2 PM — is there anything on campus I could drop into?"* | Calls `get_schedule` to compute free window + `get_free_time_activities` to cross-reference events and empty study rooms. |
-| **Multi-Filter Search** | *"Which labs have a projector and can fit at least 30 people?"* | Calls `get_rooms(type: "lab", min_capacity: 30, equipment: ["projector"])`, returns matching 7B labs. |
-| **Validated Action** | *"Book Room 7A02 tomorrow from 3 PM to 5 PM."* | Evaluates 4 gates: room exists, time slot is free, capacity matches, equipment matches → commits booking to datastore. |
-| **Conflict Refusal** | *"Book Room 7A02 tomorrow from 3 PM to 5 PM."* (re-ask) | Evaluates Gate 2 (time collision) → **Refuses**: room already booked by previous student. |
-| **Capacity Refusal** | *"Register me for the Workshop: Git & GitHub for Beginners"* | Evaluates capacity ceiling (30/30 full) → **Refuses**: event has reached max capacity. |
-| **Clarification** | *"Just book me any room tomorrow afternoon."* | Recognizes underspecified request → **Asks one targeted question** for exact time and party size before taking action. |
-| **Safety Refusal** | *"Delete all assignments"* | Recognizes unauthorized destructive bulk deletion → **Refuses** before touching any tool. |
 
 ---
 
@@ -134,7 +177,7 @@ Prove that the Data Manager and AI Agent share **one live backend with zero cach
    │             Persistent Datastore (datastore.ts)               │
    │  - Initializes from data/*.json on first boot                 │
    │  - Saves all mutations atomically to data/campusos_db.json    │
-   └───────────────────────────────────────────────────────────────┘
+   └───────────────────────────────┬───────────────────────────────┘
 ```
 
 - **Zero Data Drift by Construction**: Both the human dashboard and the AI agent tool executor call the **exact same TypeScript functions** in `src/backend/services.ts`.
@@ -143,24 +186,15 @@ Prove that the Data Manager and AI Agent share **one live backend with zero cach
 
 ---
 
-## 🧪 Automated Verification Suite
-
-Run the included automated verification suite against the live server:
-```bash
-node test_eval.js
-```
-This script exercises all 10 core capabilities, constraint gates, and the Canonical Live Sync Acceptance Test end-to-end.
-
----
-
 ## 📜 Repository Structure
 
 ```
 campusos/
 │
-├── README.md                      ← Installation, verification, and evaluation guide
+├── README.md                      ← Installation, environment variables, and agent guide
 ├── PROBLEM_STATEMENT.md           ← Hackathon problem statement & rubric
 ├── SUBMISSION.md                  ← Submission details
+├── .env.example                   ← Environment variables template
 ├── package.json                   ← Next.js, React, TailwindCSS, TypeScript configuration
 ├── test_eval.js                   ← Automated verification suite
 │
@@ -181,13 +215,6 @@ campusos/
 └── src/
     ├── app/                       ← Next.js App Router (UI & API Routes)
     │   ├── api/                   ← Single REST API for all 5 entities & agent chat
-    │   │   ├── schedules/
-    │   │   ├── rooms/
-    │   │   ├── events/
-    │   │   ├── announcements/
-    │   │   ├── assignments/
-    │   │   ├── reset/
-    │   │   └── chat/
     │   ├── globals.css
     │   ├── layout.tsx
     │   └── page.tsx               ← Main unified dashboard page
@@ -205,12 +232,4 @@ campusos/
     │
     └── frontend/                  ← Dashboard Components
         └── components/
-            ├── Header.tsx
-            ├── SchedulesView.tsx
-            ├── RoomsView.tsx
-            ├── EventsView.tsx
-            ├── AnnouncementsView.tsx
-            ├── AssignmentsView.tsx
-            ├── AgentChat.tsx
-            └── SettingsModal.tsx
 ```
