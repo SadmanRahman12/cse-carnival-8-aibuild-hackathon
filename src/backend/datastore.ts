@@ -14,19 +14,9 @@ function readJsonFile<T>(filePath: string): T {
   return JSON.parse(content);
 }
 
-function loadSeedData(): CampusDatabase {
-  if (fs.existsSync(DB_FILE)) {
-    try {
-      const data = fs.readFileSync(DB_FILE, 'utf-8');
-      const parsed = JSON.parse(data);
-      if (parsed && parsed.schedules && parsed.rooms && parsed.events && parsed.announcements && parsed.assignments) {
-        return parsed;
-      }
-    } catch (err) {
-      console.error('Failed reading existing campusos_db.json:', err);
-    }
-  }
-
+// Always build a fresh database from the immutable seed files (events.json, rooms.json, etc.).
+// This is the canonical source of truth for "initial seed data".
+function loadSeedFiles(): CampusDatabase {
   const schedules: Schedule[] = readJsonFile(path.join(DATA_DIR, 'schedules.json'));
   const rooms: Room[] = readJsonFile(path.join(DATA_DIR, 'rooms.json'));
   const events: EventItem[] = readJsonFile(path.join(DATA_DIR, 'events.json'));
@@ -40,6 +30,22 @@ function loadSeedData(): CampusDatabase {
     announcements,
     assignments,
   };
+}
+
+function loadSeedData(): CampusDatabase {
+  if (fs.existsSync(DB_FILE)) {
+    try {
+      const data = fs.readFileSync(DB_FILE, 'utf-8');
+      const parsed = JSON.parse(data);
+      if (parsed && parsed.schedules && parsed.rooms && parsed.events && parsed.announcements && parsed.assignments) {
+        return parsed;
+      }
+    } catch (err) {
+      console.error('Failed reading existing campusos_db.json:', err);
+    }
+  }
+
+  return loadSeedFiles();
 }
 
 export function getDatabase(): CampusDatabase {
@@ -109,7 +115,9 @@ export function resetDatabase(): CampusDatabase {
   if (fs.existsSync(TMP_DB_FILE)) {
     try { fs.unlinkSync(TMP_DB_FILE); } catch {}
   }
-  const seed = loadSeedData();
+  // Reset must restore the canonical seed, so rebuild from the immutable seed
+  // files rather than the possibly-mutated campusos_db.json.
+  const seed = loadSeedFiles();
   saveDatabase(seed);
   return seed;
 }
