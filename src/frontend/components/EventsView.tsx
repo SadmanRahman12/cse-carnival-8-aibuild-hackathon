@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { EventItem } from '@/backend/types';
-import { Plus, Search, Trash2, Edit3, Users, Calendar, Clock, MapPin, UserPlus, AlertTriangle, CheckCircle, X } from 'lucide-react';
+import { Plus, Search, Trash2, Edit3, Users, Calendar, Clock, MapPin, UserPlus, AlertTriangle, CheckCircle, X, Ban } from 'lucide-react';
 
 interface EventsViewProps {
   events: EventItem[];
@@ -191,6 +191,55 @@ export const EventsView: React.FC<EventsViewProps> = ({ events, onRefresh, onSho
     }
   };
 
+  const handleCancelRegistration = async (eventId: string, studentId: string, studentName: string) => {
+    if (!confirm(`Cancel registration for ${studentName} (${studentId})?`)) return;
+
+    try {
+      const res = await fetch('/api/events/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_id: eventId,
+          student_id: studentId,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        onShowToast(`Cancelled registration for ${studentName}`);
+        setIsAttendeesModalOpen(false);
+        onRefresh();
+      } else {
+        onShowToast(data.reason || 'Failed to cancel registration', 'error');
+      }
+    } catch (err: any) {
+      onShowToast(err.message, 'error');
+    }
+  };
+
+  const handleCancelEvent = async (id: string, eventName: string) => {
+    if (!confirm(`Mark event "${eventName}" as cancelled?`)) return;
+
+    try {
+      const res = await fetch('/api/events/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'cancel_event',
+          event_id: id,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        onShowToast(`Cancelled event: ${eventName}`);
+        onRefresh();
+      } else {
+        onShowToast(data.error || 'Failed to cancel event', 'error');
+      }
+    } catch (err: any) {
+      onShowToast(err.message, 'error');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Search & Actions Bar */}
@@ -324,6 +373,15 @@ export const EventsView: React.FC<EventsViewProps> = ({ events, onRefresh, onSho
                 </button>
 
                 <div className="flex items-center space-x-1">
+                  {ev.status !== 'cancelled' && (
+                    <button
+                      onClick={() => handleCancelEvent(ev.id, ev.name)}
+                      className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition"
+                      title="Cancel Event"
+                    >
+                      <Ban className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                   <button
                     onClick={() => openEditEventModal(ev)}
                     className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
@@ -425,8 +483,17 @@ export const EventsView: React.FC<EventsViewProps> = ({ events, onRefresh, onSho
               ) : (
                 viewingAttendeesEvent.registrations?.map((r, i) => (
                   <div key={i} className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                    <span className="font-semibold text-white">{r.name}</span>
-                    <span className="font-mono text-emerald-400">{r.student_id}</span>
+                    <div>
+                      <span className="font-semibold text-white block">{r.name}</span>
+                      <span className="font-mono text-emerald-400 text-[11px]">{r.student_id}</span>
+                    </div>
+                    <button
+                      onClick={() => handleCancelRegistration(viewingAttendeesEvent.id, r.student_id, r.name)}
+                      className="px-2.5 py-1 text-[11px] font-medium text-rose-400 hover:text-white hover:bg-rose-500/20 rounded-lg border border-rose-500/30 transition"
+                      title="Cancel this registration"
+                    >
+                      Cancel Reg.
+                    </button>
                   </div>
                 ))
               )}

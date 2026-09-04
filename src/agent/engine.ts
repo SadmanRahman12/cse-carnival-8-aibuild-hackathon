@@ -162,7 +162,7 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
   }
 
   // 4. Specific Room Booking Action: "Book Room 7A02 tomorrow from 3 PM to 5 PM."
-  if (q.includes('book room') || (q.includes('book') && /7[abc]\d{2}/i.test(q))) {
+  if ((q.includes('book room') || (q.includes('book') && /7[abc]\d{2}/i.test(q))) && !q.includes('cancel')) {
     const roomMatch = q.match(/7[abc]\d{2}/i);
     const roomNumber = roomMatch ? roomMatch[0].toUpperCase() : '7A02';
 
@@ -206,7 +206,7 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
   }
 
   // 5. Event Registration Action: "Register me for the Guest Lecture on Deep Learning" or "Register for..."
-  if (q.includes('register') || q.includes('sign me up')) {
+  if ((q.includes('register') || q.includes('sign me up')) && !q.includes('cancel') && !q.includes('unregister')) {
     let eventName = 'Guest Lecture';
     if (q.includes('deep learning')) eventName = 'Deep Learning';
     else if (q.includes('hackathon')) eventName = 'Hackathon';
@@ -234,6 +234,105 @@ async function executeAutonomousAgent(query: string): Promise<AgentResponse> {
     const ev = regCall.result.event;
     return {
       answer: `🎟️ **Registration Confirmed!**\n\nYou have been successfully registered for:\n\n• **Event:** ${ev.name}\n• **Date:** ${ev.date}\n• **Time:** ${formatTime12(ev.start_time)} – ${formatTime12(ev.end_time)}\n• **Venue:** Room ${ev.venue}\n• **Registered Student:** Sakibul Hassan (ID: 20-40532)\n• **Capacity:** ${ev.registered} / ${ev.capacity} seats filled.`,
+      toolCalls,
+      providerUsed: 'Autonomous Tool-Calling Engine',
+    };
+  }
+
+  // 5a. Cancel Booking Action
+  if (
+    (q.includes('cancel') || q.includes('delete booking') || q.includes('remove booking')) &&
+    (q.includes('booking') || /bk-[\w-]+/i.test(q) || (q.includes('room') && !q.includes('registration') && !q.includes('event')))
+  ) {
+    const bkMatch = q.match(/bk-[\w-]+/i);
+    const roomMatch = q.match(/7[abc]\d{2}/i);
+
+    let roomNumber = roomMatch ? roomMatch[0].toUpperCase() : '';
+    let bookingId = bkMatch ? bkMatch[0] : '';
+
+    if (bookingId && !roomNumber) {
+      const allRoomsCall = await executeAgentTool('get_rooms', {});
+      const rList = allRoomsCall.result.rooms || [];
+      for (const r of rList) {
+        if (r.bookings?.some((b: any) => b.booking_id.toLowerCase() === bookingId.toLowerCase())) {
+          roomNumber = r.room_number;
+          break;
+        }
+      }
+    }
+
+    if (roomNumber && !bookingId) {
+      const allRoomsCall = await executeAgentTool('get_rooms', {});
+      const rList = allRoomsCall.result.rooms || [];
+      const targetR = rList.find((r: any) => r.room_number.toUpperCase() === roomNumber.toUpperCase());
+      if (targetR && targetR.bookings?.length > 0) {
+        bookingId = targetR.bookings[targetR.bookings.length - 1].booking_id;
+      }
+    }
+
+    if (!roomNumber || !bookingId) {
+      return {
+        answer: "To cancel a room booking, please specify the room number (e.g. Room 7A02) or the booking ID (e.g. bk-001).",
+        toolCalls,
+        clarificationNeeded: true,
+        providerUsed: 'Autonomous Tool-Calling Engine',
+      };
+    }
+
+    const cancelCall = await executeAgentTool('cancel_booking', {
+      room_number: roomNumber,
+      booking_id: bookingId,
+      requested_by: 'Student (Sakibul Hassan)',
+    });
+    toolCalls.push(cancelCall);
+
+    if (!cancelCall.result.success) {
+      return {
+        answer: cancelCall.result.reason || `Could not cancel booking ${bookingId} in Room ${roomNumber}.`,
+        toolCalls,
+        refusalReason: cancelCall.result.reason,
+        providerUsed: 'Autonomous Tool-Calling Engine',
+      };
+    }
+
+    return {
+      answer: `✅ **Booking Cancelled Successfully!**\n\nBooking \`${bookingId}\` for Room **${roomNumber}** has been removed. The room slot is now available.`,
+      toolCalls,
+      providerUsed: 'Autonomous Tool-Calling Engine',
+    };
+  }
+
+  // 5b. Cancel Event Registration Action
+  if (
+    (q.includes('cancel') || q.includes('unregister') || q.includes('drop')) &&
+    (q.includes('registration') || q.includes('register') || q.includes('event') || q.includes('lecture') || q.includes('workshop') || q.includes('hackathon'))
+  ) {
+    let eventName = '';
+    if (q.includes('deep learning')) eventName = 'Deep Learning';
+    else if (q.includes('hackathon')) eventName = 'Hackathon';
+    else if (q.includes('git') || q.includes('github')) eventName = 'Git';
+    else if (q.includes('carnival')) eventName = 'Carnival';
+    else if (q.includes('soft computing')) eventName = 'Soft Computing';
+    else if (q.includes('orientation')) eventName = 'Orientation';
+
+    const cancelRegCall = await executeAgentTool('cancel_registration', {
+      event_name: eventName || undefined,
+      student_id: '20-40532',
+    });
+    toolCalls.push(cancelRegCall);
+
+    if (!cancelRegCall.result.success) {
+      return {
+        answer: cancelRegCall.result.reason || `Could not cancel registration.`,
+        toolCalls,
+        refusalReason: cancelRegCall.result.reason,
+        providerUsed: 'Autonomous Tool-Calling Engine',
+      };
+    }
+
+    const ev = cancelRegCall.result.event;
+    return {
+      answer: `✅ **Registration Cancelled!**\n\nYour registration for **${ev.name}** has been cancelled. (Current capacity: ${ev.registered}/${ev.capacity} seats).`,
       toolCalls,
       providerUsed: 'Autonomous Tool-Calling Engine',
     };

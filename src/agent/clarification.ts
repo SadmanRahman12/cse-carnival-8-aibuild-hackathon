@@ -8,7 +8,7 @@ export function checkClarificationConditions(userQuery: string): ClarificationCh
   const q = userQuery.toLowerCase().trim();
 
   // Check 1: Vague room booking (e.g. "Just book me any room tomorrow afternoon" or "Book me a room")
-  const isBookingIntent = q.includes('book') || q.includes('reserve');
+  const isBookingIntent = (q.includes('book') || q.includes('reserve')) && !q.includes('cancel');
   const hasSpecificRoom = /7[abc]\d{2}/i.test(q); // e.g. 7A02, 7B05, 7C01
   const hasTimeWindow = /\d{1,2}(:\d{2})?\s*(am|pm|\bto\b|-)/i.test(q) || /between\s+\d/i.test(q) || /\d{1,2}\s*pm/i.test(q);
 
@@ -30,7 +30,7 @@ export function checkClarificationConditions(userQuery: string): ClarificationCh
   }
 
   // Check 3: Vague event registration without event name
-  const isRegisterIntent = q.includes('register me') || q.includes('sign me up') || q.includes('enroll me');
+  const isRegisterIntent = (q.includes('register me') || q.includes('sign me up') || q.includes('enroll me')) && !q.includes('cancel') && !q.includes('unregister');
   const mentionsEvent = q.includes('lecture') || q.includes('hackathon') || q.includes('workshop') ||
     q.includes('contest') || q.includes('meeting') || q.includes('orientation') || q.includes('deep learning') ||
     q.includes('git') || q.includes('carnival');

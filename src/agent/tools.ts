@@ -6,6 +6,7 @@ import {
   cancelBooking,
   getAllEvents,
   registerEvent,
+  cancelRegistration,
   getAllAnnouncements,
   getAllAssignments,
   getFreeTimeActivities,
@@ -284,6 +285,31 @@ export const AGENT_TOOLS_DEFINITIONS = [
   {
     type: 'function',
     function: {
+      name: 'cancel_registration',
+      description: 'Cancel an existing event registration for a student.',
+      parameters: {
+        type: 'object',
+        required: ['student_id'],
+        properties: {
+          event_id: {
+            type: 'string',
+            description: 'Event ID (e.g. "evt-002")',
+          },
+          event_name: {
+            type: 'string',
+            description: 'Event name or partial title (e.g. "Deep Learning")',
+          },
+          student_id: {
+            type: 'string',
+            description: 'Student ID number (e.g. "20-40532")',
+          },
+        },
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
       name: 'get_free_time_activities',
       description: 'Multi-source query: finds free time slots between classes or up to a specified hour, and cross-references them with campus events and available rooms.',
       parameters: {
@@ -454,6 +480,22 @@ export async function executeAgentTool(toolName: string, args: Record<string, an
 
       case 'cancel_booking': {
         const result = cancelBooking(args.room_number, args.booking_id, args.requested_by);
+        return {
+          id,
+          tool: toolName,
+          args,
+          result,
+          status: result.success ? 'success' : 'refused',
+          timestamp,
+        };
+      }
+
+      case 'cancel_registration': {
+        const result = cancelRegistration({
+          event_id: args.event_id,
+          event_name: args.event_name,
+          student_id: args.student_id,
+        });
         return {
           id,
           tool: toolName,

@@ -580,6 +580,58 @@ export function registerEvent(params: {
   return { success: true, event };
 }
 
+export function cancelRegistration(params: {
+  event_id?: string;
+  event_name?: string;
+  student_id: string;
+}): { success: boolean; event?: EventItem; reason?: string } {
+  const db = getDatabase();
+  const { event_id, event_name, student_id } = params;
+
+  if (!student_id) {
+    return { success: false, reason: 'Refused: student_id is required to cancel registration.' };
+  }
+
+  let event: EventItem | undefined;
+  if (event_id) {
+    event = db.events.find(e => e.id === event_id);
+  } else if (event_name) {
+    const q = event_name.toLowerCase();
+    event = db.events.find(e => e.name.toLowerCase().includes(q));
+  }
+
+  if (!event) {
+    return { success: false, reason: `Refused: Event '${event_id || event_name}' does not exist on CampusOS.` };
+  }
+
+  const regIndex = event.registrations?.findIndex(r => r.student_id === student_id);
+  if (regIndex === undefined || regIndex === -1) {
+    return { success: false, reason: `Refused: Student (${student_id}) is not registered for '${event.name}'.` };
+  }
+
+  event.registrations!.splice(regIndex, 1);
+  event.registered = event.registrations!.length;
+
+  if (event.status === 'full' && event.registered < event.capacity) {
+    event.status = 'upcoming';
+  }
+
+  saveDatabase(db);
+  return { success: true, event };
+}
+
+export function cancelEvent(id: string): { success: boolean; event?: EventItem; error?: string } {
+  const db = getDatabase();
+  const index = db.events.findIndex(e => e.id === id);
+  if (index === -1) {
+    return { success: false, error: `Event with ID '${id}' not found` };
+  }
+
+  db.events[index].status = 'cancelled';
+  saveDatabase(db);
+  return { success: true, event: db.events[index] };
+}
+
 // ==================== ANNOUNCEMENTS ====================
 export function getAllAnnouncements(filter?: { priority?: string; active_only?: boolean; current_date?: string }): Announcement[] {
   const db = getDatabase();

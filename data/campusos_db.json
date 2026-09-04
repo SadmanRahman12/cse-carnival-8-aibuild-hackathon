@@ -627,12 +627,8 @@
       "venue": "7C05",
       "organizer": "CSE Department",
       "capacity": 70,
-      "registered": 62,
+      "registered": 1,
       "registrations": [
-        {
-          "student_id": "20-40532",
-          "name": "Sakibul Hassan"
-        },
         {
           "student_id": "21-41205",
           "name": "Rafi Hossain"
@@ -738,12 +734,12 @@
   "announcements": [
     {
       "id": "ann-001",
-      "title": "CSE 4113 Class Rescheduled — Sunday 7 Sep",
-      "body": "The CSE 4113 (Pattern Recognition) class scheduled for Sunday, 7th September at 1:00 PM in Room 7A07 has been moved to Room 7A04 at 3:30 PM on the same day. Students must attend the rescheduled slot. — Prof. Dr. Md. Shahriar Mahbub",
+      "title": "CSE 4113 Class MOVED to Room 7C03 at 4:00 PM — Live Sync Test",
+      "body": "NOTICE: CSE 4113 has been officially moved to Room 7C03 at 4:00 PM today.",
       "date": "2026-09-04",
       "priority": "high",
       "posted_by": "Prof. Dr. Md. Shahriar Mahbub",
-      "expires": "2026-09-07"
+      "expires": "2026-09-10"
     },
     {
       "id": "ann-002",
